@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private Vector2 direction;
     public float speed=1f;
+    public float jumpSpeed=1f;
 
 
     private void Awake()
@@ -17,8 +18,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetButtonDown("Jump"))
+        {
+            direction = Vector2.up * jumpSpeed;
+        }
+        else
+        {
+            direction += Physics2D.gravity * Time.deltaTime;
+        }
         direction.x = Input.GetAxis("Horizontal")*speed;
-       // direction.y = Input.GetAxis("Vertical")*speed;
+        direction.y = Mathf.Max(direction.y, -1f);
 
         if(direction.x > 0)
         {
