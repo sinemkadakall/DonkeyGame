@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public float jumpSpeed=1f;
 
     private bool grounded;
+    private bool climbing;
 
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     private void CheckCollision()
     {
         grounded = false;
+        climbing = false;
 
         Vector2 size=collider.bounds.size;
         size.y += 0.1f;
@@ -39,14 +41,23 @@ public class Player : MonoBehaviour
 
                 Physics2D.IgnoreCollision(collider, results[i],!grounded);
             }
+            else if (hit.layer == LayerMask.NameToLayer("Ladder"))
+            {
+                climbing = true;
+
+
+            }
         }
 
     }
     private void Update()
     {
         CheckCollision();
-
-        if (grounded && Input.GetButtonDown("Jump"))
+        if(climbing) 
+        {
+            direction.y = Input.GetAxis("Vertical") * speed;
+        }
+        else if (grounded && Input.GetButtonDown("Jump"))
         {
             direction = Vector2.up * jumpSpeed;
         }
